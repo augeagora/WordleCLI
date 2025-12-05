@@ -38,7 +38,11 @@ namespace Wordle
             }
             else
             {
-                Console.WriteLine("Hey");
+				Console.Clear();
+				Console.WriteLine("Type 1 or 0 and press ENTER to make a selection.");
+				Thread.Sleep(1000);
+                Console.Clear();
+                Start();
             }
         }
 

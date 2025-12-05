@@ -5,67 +5,79 @@ namespace Wordle
 {
 	class Program
 	{
+		public static class GlobalVariables
+		{
+			public static bool[] correctGuess = new bool[5];
+			public static string ga;
+        }
 		static void Main(string[] arg)
 		{
 			Start();
-
-			static void Start()
-			{
-				Console.WriteLine("Douglas's Wordle");
-				Console.WriteLine("1 - Play");
-				Console.WriteLine("0 - Exit");
-
-				String choice = Console.ReadLine() ?? ""; // [?? ""] removes the null warning.
-
-				if (choice.Equals("1"))
-				{
-					Console.Clear();
-					Play();
-				}
-				else if (choice.Equals("0"))
-				{
-					Console.Clear();
-					Console.WriteLine("Goodbye!");
-					Exit();
-				}
-				else
-				{
-					Console.WriteLine("Hey");
-				}
-
-			}
 		}
-		static void Exit()
+
+        static void Start()
+        {
+			Console.BackgroundColor = ConsoleColor.Magenta;
+			Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("Douglas's Wordle");
+			Console.ResetColor();
+            Console.WriteLine("1 - Play");
+            Console.WriteLine("0 - Exit");
+
+            String choice = Console.ReadLine() ?? ""; // [?? ""] removes the null warning.
+
+            if (choice.Equals("1"))
+            {
+                Play();
+            }
+            else if (choice.Equals("0"))
+            {
+                Exit();
+            }
+            else
+            {
+                Console.WriteLine("Hey");
+            }
+        }
+
+        static void Exit()
 		{
-			Environment.Exit(1);
+            Console.Clear();
+            Console.WriteLine("Goodbye!");
+			Thread.Sleep(1000);
+            Environment.Exit(1);
 		}
 
 		static void Play()
 		{
-			// QUICK REMINDERS FOR MYSELF:
-			// Wordle consists of a maximum of 6 guesses
-			// 5 letter word (normal)
-			// Green if letter is INSIDE the word AND in the correct position
-			// Yellow if letter is INSIDE the word but NOT in the correct position
-			// Grey if letter is NOT inside the word at all
-			// There can be multiple instances of a single letter, which I'll have to work out at some point
-
-			// For now the Answer will always be "s t o a t" to work out the logic
+			Console.Clear();
+			
+			for (int i = 0; i < 5; i++)
+			{
+				GlobalVariables.correctGuess[i] = false;
+			}
+			GlobalVariables.ga = GenerateAnswer();
 			char[] answer = Answer();
 			char[] validGuess;
-
+			Console.BackgroundColor = ConsoleColor.DarkYellow;
+			Console.ForegroundColor = ConsoleColor.White;
 			Console.WriteLine("Please type in a five letter word and press ENTER");
+			Console.ResetColor();
             
 
             int guessesMade = 0;
 			bool win = false;
+			
 			while(win == false)
 			{
-				if (guessesMade == 6)
+				if (GlobalVariables.correctGuess.Contains(false) == false)
 				{
-					Console.BackgroundColor = ConsoleColor.Red;
-					Console.WriteLine("\nt r a g i c");
-					Console.ResetColor();
+					win = true;
+					break;
+				}
+
+				if (guessesMade == 6 && win == false)
+				{
 					break;
 				}
                 answer = Answer(); // Reset each time
@@ -73,18 +85,58 @@ namespace Wordle
                 Respond(validGuess, answer);
 				guessesMade++;
             }
+			
+			if (win == true)
+			{
+				Win(guessesMade);
+			}
+			else
+			{
+				Lose();
+			}
         }
-		
+
+		static void Win(int guessesMade)
+		{
+			Console.BackgroundColor = ConsoleColor.Green;
+			Console.ForegroundColor = ConsoleColor.White;
+			Console.WriteLine($"\nHorray, you found the word in {guessesMade} tries!");
+			Console.ResetColor();
+			Console.ReadLine();
+			Console.Clear();
+			Start();
+		}
+
+		static void Lose()
+		{
+            Console.BackgroundColor = ConsoleColor.Red;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("\nt r a g i c");
+            Console.ResetColor();
+            Console.ReadLine();
+            Console.Clear();
+            Start();
+        }
+
 		static char[] Answer()
 		{
-            char[] answer = { 's', 't', 'o', 'a', 't' };
+			char[] answer = GlobalVariables.ga.ToCharArray();
             return answer;
 		}
+
+		static string GenerateAnswer()
+		{
+            Random random = new Random();
+            int randomNumber = random.Next(0, 6);
+            string[] answerPool = { "stoat", "drunk", "boink", "furry", "goons", "funny" };
+            string randomAnswer = answerPool[randomNumber];
+			return randomAnswer;
+        }
 
 		static char[] GuessCheck()
 		{
             Console.ForegroundColor = ConsoleColor.Cyan;
-            String guess = Console.ReadLine() ?? "";
+            String guess = Console.ReadLine().ToLower();
             Console.ResetColor();
 
             char[] validGuess = {};
@@ -112,6 +164,7 @@ namespace Wordle
                     Console.Write(vg[i]);
 					Console.ResetColor();
                     Console.Write(" ");
+					GlobalVariables.correctGuess[i] = true;
                 }
 				else if (answer.Contains(vg[i]))
 				{
@@ -120,6 +173,7 @@ namespace Wordle
                     Console.Write(vg[i]);
                     Console.ResetColor();
                     Console.Write(" ");
+                    GlobalVariables.correctGuess[i] = false;
                 }
 				else
 				{
@@ -128,6 +182,7 @@ namespace Wordle
                     Console.Write(vg[i]);
                     Console.ResetColor();
                     Console.Write(" ");
+                    GlobalVariables.correctGuess[i] = false;
                 }
                 // Changes the value in answer so that when checking if answer contains
                 // x char it doesn't say a char is within the array multiple times incorrectly.

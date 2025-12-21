@@ -108,6 +108,7 @@ void Play(bool devMode)
         {
             guessArray[i] = guess[i].ToString();
         }
+
         if (devMode)
         {
             foreach (String g in guessesMade) //DM
@@ -235,14 +236,23 @@ void Win(int tries)
 
     Console.ForegroundColor = ConsoleColor.Green;
     Console.WriteLine();
+    String m1 = $"Horray! You found the word in {tries} try!";
+    String m2 = $"Horray! You found the word in {tries} tries!";
     if (tries == 1)
     {
-        Console.WriteLine($"Horray! You found the word in {tries} try!");
+        foreach (char c in m1)
+        {
+            Console.Write(c + ""); Thread.Sleep(50);
+        }
     }
     else
     {
-        Console.WriteLine($"Horray! You found the word in {tries} tries!");
+        foreach (char c in m2)
+        {
+            Console.Write(c + ""); Thread.Sleep(50);
+        }
     }
+    Console.WriteLine();
     Console.ReadLine();
     Console.Clear();
     Reset();
@@ -261,7 +271,12 @@ void Lose(String word)
 
     Console.ForegroundColor = ConsoleColor.Red;
     Console.WriteLine();
-    Console.WriteLine($"You lost... The word was: {word}");
+    String m = $"You lost... The word was: {word.ToUpper()}";
+    foreach (char c in m) 
+    { 
+        Console.Write(c + ""); Thread.Sleep(50); 
+    }
+    Console.WriteLine();
     Console.ReadLine();
     Console.Clear();
     Reset();
@@ -352,7 +367,7 @@ void Yellow(String s)
 void Gray(String s)
 {
     Console.BackgroundColor = ConsoleColor.Gray;
-    Console.ForegroundColor = ConsoleColor.Black;
+    Console.ForegroundColor = ConsoleColor.Gray;
     Console.Write(s);
     Console.ResetColor();
 }

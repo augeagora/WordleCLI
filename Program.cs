@@ -12,7 +12,7 @@ void Menu()
 {
     var devMode = false;
 
-    TitleColor("Douglas's Wordle v0.3", "WRITELINE");
+    TitleColor("Douglas's Wordle v0.4", "WRITELINE");
     Console.WriteLine();
     Console.WriteLine("0 -- Play");
     Console.WriteLine("1 -- DevMode");

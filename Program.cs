@@ -14,23 +14,23 @@ void Menu()
 
     TitleColor("Douglas's Wordle v0.4", "WRITELINE");
     Console.WriteLine();
-    Console.WriteLine("0 -- Play");
-    Console.WriteLine("1 -- DevMode");
-    Console.WriteLine("  -- Stats");
-    Console.WriteLine("2 -- About");
-    Console.WriteLine("3 -- Exit");
+    Console.WriteLine("1 -- Play");
+    Console.WriteLine("2 -- DevMode");
+    Console.WriteLine("3 -- Stats");
+    Console.WriteLine("4 -- About");
+    Console.WriteLine("5 -- Exit");
     Console.WriteLine();
     UserColor();
     
         String selection = Console.ReadLine();
 
-    while (selection != "0" && selection != "1" && selection != "2" && selection != "3")
+    while (selection != "1" && selection != "2" && selection != "3" && selection != "4" && selection != "5")
     {
         selection = Console.ReadLine();
     }
     Reset();
 
-    if (selection == "0")
+    if (selection == "1")
     {
         Console.Clear();
         Console.ForegroundColor = ConsoleColor.Cyan;
@@ -40,7 +40,7 @@ void Menu()
         Play(devMode);
     }
 
-    if (selection == "1")
+    if (selection == "2")
     {
         Console.Clear();
         TitleColor(" {DEVMODE} ", "WRITELINE");
@@ -50,13 +50,19 @@ void Menu()
         Play(devMode);
     }
 
-    if (selection == "2")
+    if (selection == "3")
+    {
+        Console.Clear();
+        Stats();
+    }
+
+    if (selection == "4")
     {
         Console.Clear();
         About();
     }
 
-    if (selection == "3")
+    if (selection == "5")
     {
         Console.Clear();
         Exit();
@@ -562,5 +568,27 @@ void About()
     Console.ReadLine();
     Console.Clear();
     Console.ResetColor();
+    Menu();
+}
+
+void Stats()
+{
+    Console.WriteLine(" ────────────────── S T A T S ────────────────── ");
+    Console.WriteLine("|                                               |");
+    Console.WriteLine("|                                               |");
+    Console.WriteLine("|                                               |");
+    Console.WriteLine("|                                               |");
+    Console.WriteLine("|                                               |");
+    Console.WriteLine("|                                               |");
+    Console.WriteLine("|                                               |");
+    Console.WriteLine("|                                               |");
+    Console.WriteLine("|                                               |");
+    Console.WriteLine("|                                               |");
+    Console.WriteLine("|                                               |");
+    Console.WriteLine("|                                               |");
+    Console.WriteLine("|                                               |");
+    Console.WriteLine(" ────────────────── S T A T S ────────────────── ");
+    Console.ReadLine();
+    Console.Clear();
     Menu();
 }

@@ -1,9 +1,5 @@
 ﻿using System.Data;
-using System.IO;
 using System.Media;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-
 
 Boot();
 Menu();
@@ -71,6 +67,11 @@ void Menu()
 
 void Play(bool devMode)
 {
+    if (!devMode)
+    {
+        UpdateGamesPlayed();
+    }
+
     // First we need to get the wordList, answerWords and pick the word
     List<string> wordList = GetWordList();
     List<string> answerWords = GetAnswerWords();
@@ -245,6 +246,8 @@ void Play(bool devMode)
 
 void Win(int tries)
 {
+    UpdateWins();
+
     // Play Win Sound
     if (OperatingSystem.IsWindows())
     {
@@ -280,6 +283,8 @@ void Win(int tries)
 
 void Lose(String word)
 {
+    UpdateLosses();
+
     // Play Lose Sound
     if (OperatingSystem.IsWindows())
     {
@@ -544,7 +549,7 @@ void About()
 {
     Console.ForegroundColor= ConsoleColor.White;
     Console.WriteLine(" ─────────────────────────────────────────────── ");
-    Console.WriteLine("| Developed by Douglas Serrano                  |");
+    Console.WriteLine("| By Douglas Serrano                            |");
     Console.WriteLine("| Github: AugeAgora                             |");
     Console.WriteLine("|                                               |");
     Console.WriteLine("| I wanted to see if I could replicate the game |");
@@ -552,16 +557,9 @@ void About()
     Console.WriteLine("| to the base game.                             |");
     Console.WriteLine("|                                               |");
     Console.WriteLine("| All sounds effects were hastily made by me in |");
-    Console.WriteLine("| Ableton! I did want to make little menu music |");
-    Console.WriteLine("| but I worried it would become annoying to     |");
-    Console.WriteLine("| listen to. The package I'm using for audio    |");
-    Console.WriteLine("| also doesn't give me much leeway so I think   |");
-    Console.WriteLine("| further work will be done once I move to a    |");
-    Console.WriteLine("| different framework.                          |");
+    Console.WriteLine("| Ableton!                                      |");
     Console.WriteLine("|                                               |");
-    Console.WriteLine("| This is Version [0.4]. I plan on releasing up |");
-    Console.WriteLine("| to version [1.0] and then moving on to        |");
-    Console.WriteLine("| rebuild the project in some game engine.      |");
+    Console.WriteLine("| This is Version [0.4].                        |");
     Console.WriteLine("|                                               |");
     Console.WriteLine("| Thanks for playing!                           |");
     Console.WriteLine(" ─────────────────────────────────────────────── ");
@@ -573,22 +571,75 @@ void About()
 
 void Stats()
 {
+    // Read File
+    string filePath = @"words//stats.txt";
+    List<string> stats = new List<string>();
+    stats = File.ReadAllLines(filePath).ToList();
+
+    double gamesPlayed = Convert.ToDouble(stats[0]);
+    double wins = Convert.ToDouble(stats[1]);
+    double losses = Convert.ToDouble(stats[2]);
+    double winPercent = (wins / gamesPlayed) * 100;
+
+    if (gamesPlayed == 0)
+    {
+        winPercent = 0;
+    }
+    winPercent = Math.Round(winPercent, 2);
+
     Console.WriteLine(" ────────────────── S T A T S ────────────────── ");
-    Console.WriteLine("|                                               |");
-    Console.WriteLine("|                                               |");
-    Console.WriteLine("|                                               |");
-    Console.WriteLine("|                                               |");
-    Console.WriteLine("|                                               |");
-    Console.WriteLine("|                                               |");
-    Console.WriteLine("|                                               |");
-    Console.WriteLine("|                                               |");
-    Console.WriteLine("|                                               |");
-    Console.WriteLine("|                                               |");
-    Console.WriteLine("|                                               |");
-    Console.WriteLine("|                                               |");
-    Console.WriteLine("|                                               |");
+    Console.WriteLine($"Games Played: {gamesPlayed}");
+    Console.WriteLine($"        Wins: {wins}");
+    Console.WriteLine($"      Losses: {losses}");
+    Console.WriteLine($"        Win%: {winPercent}%");
     Console.WriteLine(" ────────────────── S T A T S ────────────────── ");
+    
     Console.ReadLine();
     Console.Clear();
     Menu();
+}
+
+void UpdateGamesPlayed()
+{
+    // Read File
+    string filePath = @"words//stats.txt";
+    List<string> stats = new List<string>();
+    stats = File.ReadAllLines(filePath).ToList();
+
+    int gamesPlayed = Convert.ToInt32(stats[0]);
+    gamesPlayed++;
+    stats[0] = gamesPlayed.ToString();
+
+    // Write to file
+    File.WriteAllLines(filePath, stats);
+}
+
+void UpdateWins()
+{
+    // Read File
+    string filePath = @"words//stats.txt";
+    List<string> stats = new List<string>();
+    stats = File.ReadAllLines(filePath).ToList();
+
+    int wins = Convert.ToInt32(stats[1]);
+    wins++;
+    stats[1] = wins.ToString();
+
+    // Write to file
+    File.WriteAllLines(filePath, stats);
+}
+
+void UpdateLosses()
+{
+    // Read File
+    string filePath = @"words//stats.txt";
+    List<string> stats = new List<string>();
+    stats = File.ReadAllLines(filePath).ToList();
+
+    int losses = Convert.ToInt32(stats[2]);
+    losses++;
+    stats[2] = losses.ToString();
+
+    // Write to file
+    File.WriteAllLines(filePath, stats);
 }
